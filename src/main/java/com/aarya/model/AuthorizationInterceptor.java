@@ -14,6 +14,9 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         if(code == null){
             response.sendError(401);
             return false;
+        } else if(!AuthorizationController.sessions.containsKey(code)) {
+            response.sendError(401);
+            return false;
         } else {
             return AuthorizationController.sessions.containsKey(code) || code.equalsIgnoreCase("dev");
         }

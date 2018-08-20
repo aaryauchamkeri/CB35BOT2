@@ -3,89 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <title>Title</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
-    .button {
-        background-color: #555555; 
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 24px;
-    }
-    .textBox{
-        background-color: #555555;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 24px;
-    }
-    body{
-        background-color: rgb(216, 216, 216);
-    }
-    .iframes{
-        border: none;
-    }
-    #users {
-        border-color: antiquewhite;
-        font-family: Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
+    .custom-select {
+        /*position: relative;*/
+        font-family: Arial;
     }
 
-    #users td, #users th {
-        border: 1px solid #ddd;
-        padding: 8px;
+    .custom-select select {
+        display: none; /*hide original SELECT element: */
     }
 
-    #users tr:nth-child(even){background-color: #f2f2f2;}
-
-    #users tr:nth-child(odd){background-color: rgb(152, 151, 151);}
-
-    #users tr:hover {background-color: #ddd;}
-
-    #users th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #575757;
-        color: white;
-    } 
-
-    #banButton{
-        background-color: rgb(245, 101, 91);
+    .select-selected {
+        background-color: DodgerBlue;
     }
+
+    /* Style the arrow inside the select element: */
+    .select-selected:after {
+        position: absolute;
+        content: "";
+        top: 14px;
+        right: 10px;
+        width: 0;
+        height: 0;
+        border: 6px solid transparent;
+        border-color: #fff transparent transparent transparent;
+    }
+
+    /* Point the arrow upwards when the select box is open (active): */
+    .select-selected.select-arrow-active:after {
+        border-color: transparent transparent #fff transparent;
+        top: 7px;
+    }
+
+    /* style the items (options), including the selected item: */
+    .select-items div,.select-selected {
+        color: #ffffff;
+        padding: 8px 16px;
+        border: 1px solid transparent;
+        border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+        cursor: pointer;
+    }
+
+    /* Style items (options): */
+    .select-items {
+        position: absolute;
+        background-color: DodgerBlue;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 99;
+    }
+
+    /* Hide the items when the select box is closed: */
+    .select-hide {
+        display: none;
+    }
+
+    .select-items div:hover, .same-as-selected {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
 </style>
 </head>
-<body style="background-color: rgb(205, 205, 205);"> 
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="index.html">Sb808bit Website!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class = "main" align = "center">
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto" id = "navbar">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="form-inline my-2 my-lg-0">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit" id = "sign-in-button">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class = "container" align="center" style="margin-top: 16px; margin-bottom: 16px;">
         <iframe src = "liveMessages.html" height="400" width="50%" class = "iframes" id = "messageDisplay"></iframe>
-        <button onclick = "changeScroll()" id = "scrollChange">Turn Off Auto Scroll</button> 
+        <button onclick = "changeScroll()" id = "scrollChange" class="btn btn-basic">Turn Off Auto Scroll</button>
         <br>
-        <input type="text" id = "messageInput" class = "textBox">
-        <button onclick = "sendMessage()" id = "send" class="button">Send Message</button>
+        <input type="text" id = "messageInput" class = "textBox" style = "border: none; padding: 8px;" placeholder="Enter Something Here">
+        <button onclick = "sendMessage()" id = "send" class="btn btn-primary btn-lg">Send Message</button>
 
         <br>
         <br>
 
-        <button onclick = "sendUpdate()" class = "button" style="background-color: rgb(186, 65, 247);">Send Update That You Are Live</button>
+        <button onclick = "sendUpdate()" class = "btn btn-success btn-lg">Send Update That You Are Live</button>
 
         <br>
         <br>
 
-        <button onclick = "viewOlder()" class = "button" style="background-color: rgb(73, 214, 158);">Look at the message history</button>
+        <button onclick = "viewOlder()" class = "btn btn-info btn-lg">Look at the message history</button>
 
         <br>
         <br>
         <hr color="black">
         <br>
 
-        <table id = "users">
+        <table id = "users" class = "table">
             <tr>
                 <th>Id</th>
                 <th>Name</th>
@@ -96,9 +123,8 @@
         <br>
         <br>
 
-        <select class = "button" id = "ban">
-        </select>
-        <button class = "button" onclick = "banUser()" id = "banButton">BAN</button>
+        <select class = "custom-select" id = "ban"></select>
+        <button class = "btn btn-danger btn-lg" onclick = "banUser()" id = "banButton">BAN</button>
     </div>
 
 </body>

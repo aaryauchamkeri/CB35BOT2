@@ -2,9 +2,11 @@ package com.aarya.model;
 
 import com.aarya.main.Cb35BotApplication;
 import org.javacord.api.entity.server.Server;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class DB{
 
     public static Map<String, User> dataBase = new HashMap<>();

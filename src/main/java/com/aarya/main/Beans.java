@@ -19,11 +19,6 @@ public class Beans implements WebMvcConfigurer {
         registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/resources/**");
     }
 
-     @Bean(name = "db")
-     public DB getDB(){
-         return new DB();
-     }
-
     @Bean(name = "api")
     public DiscordApi getApi(){
          String s = "Myj0MCf3LyHwNSb/Ly@/Myjw-W^JFNv-Ery50L1dbKJqGPkR733phEgsW3j";

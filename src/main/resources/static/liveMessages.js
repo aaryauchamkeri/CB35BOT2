@@ -5,9 +5,41 @@ let temp = 0;
 let channelId = "";
 let scroll = true;
 let setImage = false;
+let userInfo;
+let sessionId;
+
+(function(){
+    console.log("executed");
+    let cookies = document.cookie;
+    let asArray = cookies.split(';');
+    asArray.forEach(function (v, i){
+        let cookieValue = v.split('=');
+        if(cookieValue[0].trim() === "sessionId"){
+            sessionId = cookieValue[1].trim();
+            let x = fetch("/main/getUserInfo", {
+                method : "GET",
+                headers : {
+                    "sessionId" : `${cookieValue[1].trim()}`
+                },
+            });
+            x.then(r =>{
+                if(r.status === 200){
+                    loggedIn = true;
+                    r.json().then(json =>{
+                        userInfo = json;
+                        // document.getElementById("sign-in-button").innerText = "Sign Out " + userInfo.username;
+                    });
+                } else {
+                    // do nothing
+                }
+            });
+        }
+    });
+})();
 
 let request = new XMLHttpRequest;
 request.open("GET", "/main/textChannels", true);
+request.setRequestHeader("sessionId", sessionId)
 request.onload = function(){
     console.log(this.responseText);
     let results = JSON.parse(this.responseText);
@@ -26,6 +58,7 @@ constantlyUpdate = () => {
     let response;
     let x = new XMLHttpRequest();
     x.open("GET", "/main/getMessages", true);
+    x.setRequestHeader("sessionId", sessionId);
     x.onload = function(){
         // console.log(this.status);
         response = this.responseText;
