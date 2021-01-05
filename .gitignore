@@ -32,8 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 .mvn/
-*.project
-*.md
-*.cmd
-mvnw
-.classpath
+
