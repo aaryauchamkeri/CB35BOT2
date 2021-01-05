@@ -42,11 +42,17 @@ public class MainController {
         return mv;
     }
 
+    @RequestMapping("/sendLiveUpdate")
+    public void sendLiveUpdate(){
+        ServerTextChannel ch = Cb35BotApplication.mine.getTextChannelById("795485817714769970").get();
+        ch.sendMessage(Cb35BotApplication.mine.getEveryoneRole().getMentionTag() + " I'm live");
+        ch.sendMessage("https://www.twitch.tv/sb808bit");
+    }
+
     @RequestMapping("/authorize")
     public int setServer(@RequestBody String s){
         String serverId = s.trim();
         Server server = Cb35BotApplication.api.getServerById(serverId).orElse(null);
-        System.out.println(s);
         if(server == null){
             System.out.println("NULL");
             return 0;

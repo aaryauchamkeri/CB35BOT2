@@ -28,6 +28,12 @@
     request.send();
 })();
 
+let sendUpdate = () => {
+    let xhr = new XMLHttpRequest;
+    xhr.open("GET", "/sendLiveUpdate");
+    xhr.send();
+}
+
 let banUser = () => {
     let val = document.getElementById("ban").value;
     let xhr = new XMLHttpRequest;
