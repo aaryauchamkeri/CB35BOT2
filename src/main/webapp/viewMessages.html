@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+<style>
+    .button {
+        background-color: #555555; 
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 24px;
+    }
+    .textBox{
+        background-color: #555555;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 24px;
+    }
+    body{
+        background-color: rgb(216, 216, 216);
+    }
+    .iframes{
+        border: none;
+    }
+    #users {
+        border-color: antiquewhite;
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #users td, #users th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #users tr:nth-child(even){background-color: #f2f2f2;}
+
+    #users tr:hover {background-color: #ddd;}
+
+    #users th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #575757;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+    <div class = "main" align = "center">
+        <iframe src = "/liveMessages.html" height="400" width="50%" class = "iframes"></iframe>
+        <br>
+        <input type="text" id = "messageInput" class = "textBox">
+        <button onclick = "sendMessage()" id = "send" class="button">Send Message</button>
+
+        <br>
+        <br>
+        <hr color="black">
+        <br>
+
+        <table id = "users">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </table>
+
+        <br>
+        <br>
+        <br>
+
+        <select class = "button" id = "ban">
+        </select>
+        <button class = "button" onclick = "banUser()">BAN</button>
+    </div>
+
+</body>
+<script src = "viewMessages.js"></script>
+</html>
