@@ -44,6 +44,8 @@
 
     #users tr:nth-child(even){background-color: #f2f2f2;}
 
+    #users tr:nth-child(odd){background-color: rgb(152, 151, 151);}
+
     #users tr:hover {background-color: #ddd;}
 
     #users th {
@@ -52,13 +54,18 @@
         text-align: left;
         background-color: #575757;
         color: white;
+    } 
+
+    #banButton{
+        background-color: rgb(245, 101, 91);
     }
 </style>
 </head>
-<body>
+<body style="background-color: rgb(205, 205, 205);"> 
 
     <div class = "main" align = "center">
-        <iframe src = "/liveMessages.html" height="400" width="50%" class = "iframes"></iframe>
+        <iframe src = "/liveMessages.html" height="400" width="50%" class = "iframes" id = "messageDisplay"></iframe>
+        <button onclick = "changeScroll()" id = "scrollChange">Turn Off Auto Scroll</button> 
         <br>
         <input type="text" id = "messageInput" class = "textBox">
         <button onclick = "sendMessage()" id = "send" class="button">Send Message</button>
@@ -66,7 +73,12 @@
         <br>
         <br>
 
-        <button onclick = "sendUpdate()" class = "button">Send Update That You Are Live</button>
+        <button onclick = "sendUpdate()" class = "button" style="background-color: rgb(186, 65, 247);">Send Update That You Are Live</button>
+
+        <br>
+        <br>
+
+        <button onclick = "viewOlder()" class = "button" style="background-color: rgb(73, 214, 158);">Look at the message history</button>
 
         <br>
         <br>
@@ -86,7 +98,7 @@
 
         <select class = "button" id = "ban">
         </select>
-        <button class = "button" onclick = "banUser()">BAN</button>
+        <button class = "button" onclick = "banUser()" id = "banButton">BAN</button>
     </div>
 
 </body>

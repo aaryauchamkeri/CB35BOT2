@@ -1,13 +1,15 @@
 
+let scrolling = true;
+let id = "";
+
+
 (function(){
-    console.log("hello world");
     let request = new XMLHttpRequest;
     request.open("GET", "/getUsers", true);
     request.onload = function(){
         console.log(this.status);
         let response = this.responseText;
         let another = JSON.parse(response);
-        console.log(response);
         another.forEach(function(element){
             let op = document.createElement("option")
             op.value = element.id;
@@ -28,6 +30,20 @@
     request.send();
 })();
 
+let changeScroll = () => {
+    scrolling = !scrolling;
+    document.getElementById("messageDisplay").contentWindow.postMessage('hello', '*');
+    if(scrolling){
+        document.getElementById("scrollChange").innerHTML = "Turn Off Auto Scroll";
+    } else{
+        document.getElementById("scrollChange").innerHTML = "Turn On Auto Scroll";
+    }
+}
+
+let viewOlder = () => {
+    window.location.replace("/liveMessages.html");
+}
+
 let sendUpdate = () => {
     let xhr = new XMLHttpRequest;
     xhr.open("GET", "/sendLiveUpdate");
@@ -42,7 +58,7 @@ let banUser = () => {
 };
 
 sendMessage = () => {
-    document.getElementById("messageInput").value;
+    let valueToSend = document.getElementById("messageInput").value;
     let x = new XMLHttpRequest();
     x.open("POST", "/sendMessage");
     x.onload = () => {
@@ -56,6 +72,11 @@ sendMessage = () => {
             }, 3000);
         }
     }
-    x.send(document.getElementById("messageInput").value);
-    console.log("sent");
+    x.setRequestHeader("server", id);
+    x.send(valueToSend);
+    document.getElementById("messageInput").value = "";
 };
+
+window.onmessage = function(e){
+    id = e.data;
+}

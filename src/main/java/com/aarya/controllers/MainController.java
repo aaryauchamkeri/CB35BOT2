@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -124,7 +125,12 @@ public class MainController {
     @PostMapping("/sendMessage")
     public void sendMessage(@RequestBody String value, HttpServletRequest req) throws ServerException{
         if(access){
-            Cb35BotApplication.mine.getTextChannelById(req.getHeader("server")).get().sendMessage(value);
+            Optional<ServerTextChannel> channel = Cb35BotApplication.mine.getTextChannelById(req.getHeader("server").trim());
+            if(!channel.isPresent()){
+
+            } else{
+                channel.get().sendMessage(value);
+            }
         } else{
             throw new ServerException("NOT PRESENT");
         }

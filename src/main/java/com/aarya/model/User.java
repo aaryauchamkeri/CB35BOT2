@@ -6,17 +6,18 @@ public class User implements Comparable<User> {
 
     private String id;
     private String name;
+    private String role;
 
     public User(){
         id = "";
         name = "";
+        role = "";
     }
 
     public User(String id, String name){
         this.id = id;
         this.name = name;
     }
-
 
     public String getId() {
         return id;

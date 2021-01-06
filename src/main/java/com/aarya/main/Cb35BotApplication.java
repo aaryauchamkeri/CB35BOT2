@@ -22,8 +22,5 @@ public class Cb35BotApplication {
 		SpringApplication.run(Cb35BotApplication.class, args);
 		ApplicationContext appContext = new AnnotationConfigApplicationContext(Beans.class);
 		Cb35BotApplication.api.addMessageCreateListener(new MessageListener());
-		
 	}
-
-
 }

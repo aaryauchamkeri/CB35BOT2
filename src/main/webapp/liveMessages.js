@@ -3,7 +3,8 @@
 let messages = [];
 let temp = 0;
 let channelId = "";
-
+let scroll = true;
+let setImage = false;
 
 let request = new XMLHttpRequest;
 request.open("GET", "/textChannels", true);
@@ -54,21 +55,37 @@ constantlyUpdate = () => {
             }
         }
 
+        if(!setImage){
+            // document.body.style.backgroundColor = "linear-gradient(to bottom, rgb(96, 96, 96), rgb(174, 55, 160))";
+            document.body.style.backgroundColor = "rgb(174, 55, 160)";
+            setImage = true;
+        }
+
     }
     x.setRequestHeader("channelId", channelId);
     x.send();
 }
 
+window.onmessage = (e) => {
+    if (e.data == 'hello') {
+        scroll = !scroll;
+    }
+}
+
 setChannel = () => {
     channelId = document.getElementById("channels").value;
+    console.log(channelId);
+    window.top.postMessage(channelId, '*')
     document.getElementById("channels").style.visibility = "collapse";
     document.getElementById("sendChannel").style.visibility = "collapse";
     setInterval(constantlyUpdate, 5000);
     if ( window.location !== window.parent.location ){
         setInterval(() => {
-            document.getElementById('bottom').scrollIntoView();
+            if(scroll){
+                document.getElementById('bottom').scrollIntoView();
+            }
         }, 50);    
-    }   
+    }
 }
 
 
