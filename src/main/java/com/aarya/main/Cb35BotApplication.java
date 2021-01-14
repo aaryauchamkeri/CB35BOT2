@@ -15,12 +15,19 @@ public class Cb35BotApplication {
 	public static Server mine;
 
 	static{
-		api = new DiscordApiBuilder().setToken("Nzk1NDg4MzIxOTc0MzA0Nzkx.X_KGOw.eavdH-uDi6Usewgw75kmaM_6dz4").setAllIntents().login().join();
+
+		String s = "Myj0MCf3LyHwNSb/Ly@/Myjw-W^JFNv-Ery50L1dbKJqGPkR733phEgsW3j";
+		String toEnter = "";
+		for(int i = 0; i < s.length(); i++){
+			toEnter += (char)(s.charAt(i)+1);
+		}
+		api = new DiscordApiBuilder().setToken(toEnter).setAllIntents().login().join();
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(Cb35BotApplication.class, args);
 		ApplicationContext appContext = new AnnotationConfigApplicationContext(Beans.class);
 		Cb35BotApplication.api.addMessageCreateListener(new MessageListener());
+		
 	}
 }

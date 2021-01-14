@@ -82,6 +82,11 @@ public class MainController {
                 } else if(!m.getContent().equals("")){
                     JsonMessage message = new JsonMessage(m.getAuthor().getName(), m.getContent(), m.getAuthor().asUser().get().getAvatar().getUrl().toExternalForm());
                     messages.add(message);
+                } else if(m.getAttachments().size() > 0){
+                    if(m.getAttachments().get(0).isImage()){
+                        JsonMessage message = new JsonMessage(m.getAuthor().getName(), m.getAttachments().get(0).getUrl().toExternalForm(), m.getAuthor().asUser().get().getAvatar().getUrl().toExternalForm());
+                        messages.add(message);
+                    }
                 } else {
                     JsonMessage message = new JsonMessage(m.getAuthor().getName(), String.format("%s joined server", m.getAuthor().getName()), m.getAuthor().asUser().get().getAvatar().getUrl().toExternalForm());
                     messages.add(message);
@@ -96,6 +101,7 @@ public class MainController {
 
     @GetMapping("/textChannels")
     public List<TextChannelInfo> channels(ModelAndView mv) throws ServerException{   
+        String entree = "";
         if(access){
             List<TextChannelInfo> listOfChannels = new ArrayList<>();
             List<ServerTextChannel> channels = Cb35BotApplication.mine.getTextChannels();
