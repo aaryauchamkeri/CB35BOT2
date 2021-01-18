@@ -12,8 +12,7 @@ import java.net.URL;
 
 public class MemerThing {
     public static void sendMeme(MessageCreateEvent event) throws Exception{
-        BufferedImage image = null;
-        String jsonRecieved = "";
+        BufferedImage image;
         URL url = new URL("https://meme-api.herokuapp.com/gimme");
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");

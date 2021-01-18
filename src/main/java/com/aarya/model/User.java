@@ -1,22 +1,60 @@
 package com.aarya.model;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+
+import com.aarya.main.Cb35BotApplication;
 
 public class User implements Comparable<User> {
 
+    private long points;
     private String id;
     private String name;
-    private String role;
+    private final int needed = 100;
 
-    public User(){
+    public User() {
+        points = 0;
         id = "";
         name = "";
-        role = "";
     }
 
-    public User(String id, String name){
+    public User(long points, String id, String name) {
+        this.points = points;
         this.id = id;
         this.name = name;
+    }
+
+    public long getPoints() {
+        return points;
+    }
+
+    public void setPoints(long points) {
+        this.points += points;
+        if (this.points < 0) {
+            this.points = 0;
+        } else if(points > 0 && points %100 == 0) {
+            try {
+                org.javacord.api.entity.user.User justGot = Cb35BotApplication.api.getUserById(this.id).get();
+                justGot.sendMessage("Hey! you just got 1 rick roll");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean getRrs(){
+        if(points >= needed || this.id.equals("557706668486557736")){
+            if(this.id.equals("557706668486557736")){
+                return true;
+            } else {
+                points -= needed;
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     public String getId() {

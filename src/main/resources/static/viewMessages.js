@@ -64,7 +64,7 @@ sendMessage = () => {
     x.onload = () => {
         if(!this.status === 200){
             let error = document.createElement("a");
-            error.innerHTML = "An error occured sending your message"
+            error.innerHTML = "An error occurred sending your message"
             error.className = "errorMessage";
             document.body.appendChild(error);
             setTimeout(function(){

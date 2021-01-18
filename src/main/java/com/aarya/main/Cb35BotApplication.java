@@ -1,5 +1,8 @@
 package com.aarya.main;
 
+import com.aarya.model.DB;
+import com.aarya.model.User;
+
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.server.Server;
@@ -8,9 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.Scanner;
+
 @SpringBootApplication
 public class Cb35BotApplication {
-
 	public static DiscordApi api;
 	public static Server mine;
 
@@ -28,6 +32,5 @@ public class Cb35BotApplication {
 		SpringApplication.run(Cb35BotApplication.class, args);
 		ApplicationContext appContext = new AnnotationConfigApplicationContext(Beans.class);
 		Cb35BotApplication.api.addMessageCreateListener(new MessageListener());
-		
 	}
 }

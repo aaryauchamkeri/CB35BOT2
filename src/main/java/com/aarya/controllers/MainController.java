@@ -1,25 +1,30 @@
 package com.aarya.controllers;
 
 import com.aarya.main.Cb35BotApplication;
+import com.aarya.model.DB;
 import com.aarya.model.JsonMessage;
 import com.aarya.model.ServerException;
 import com.aarya.model.TextChannelInfo;
 import com.aarya.model.User;
 
+import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.server.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import sun.rmi.rmic.Main;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,11 +32,17 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class MainController {
 
-//    @Autowired
-//    private DB db;
+    private final DB db;
+    private final DiscordApi api;
 
-    public static int messageCount = 100;
-    private static boolean access = false;
+    public static int messageCount = 500;
+    private boolean access = false;
+
+    @Autowired
+    public MainController(DiscordApi api, DB db){
+        this.api = api;
+        this.db = db;
+    }
 
     @RequestMapping("/")
     public ModelAndView getHome(ModelAndView mv){
@@ -53,17 +64,23 @@ public class MainController {
     @RequestMapping("/authorize")
     public int setServer(@RequestBody String s){
         String serverId = s.trim();
-        Server server = Cb35BotApplication.api.getServerById(serverId).orElse(null);
+        Server server = this.api.getServerById(serverId).orElse(null);
         if(server == null){
             System.out.println("NULL");
             return 0;
-
         } else{
-            if(!server.isAdmin(Cb35BotApplication.api.getYourself())){
+            if(!server.isAdmin(this.api.getYourself())){
                 return 2;
             } else{
                 Cb35BotApplication.mine = server;
+                DB.initializeList();
                 access = true;
+                Cb35BotApplication.mine.addServerMemberJoinListener(e -> {
+                    String id = e.getUser().getIdAsString();
+                    String name = e.getUser().getName();
+                    User u = new User(0, id , name);
+                    DB.dataBase.put(id, u);
+                });
                 return 1;
             }
         }
@@ -118,9 +135,9 @@ public class MainController {
     public List<User> getUsers() throws ServerException{
         if(access){
             List<User> listModeled = new ArrayList<>();
-            ArrayList<org.javacord.api.entity.user.User> arr = new ArrayList<>(Cb35BotApplication.mine.getMembers());
-            for(org.javacord.api.entity.user.User u : arr){
-                listModeled.add(new User(u.getIdAsString(), u.getName()));
+            Set<String> set = DB.dataBase.keySet();
+            for(String name : set){
+                listModeled.add(DB.dataBase.get(name));
             }
             return listModeled;
         } else{
@@ -145,7 +162,7 @@ public class MainController {
     @PostMapping("/banUser")
     public void banUser(@RequestBody String s) throws ServerException, Exception{
         if(access){
-            Cb35BotApplication.mine.banUser(Cb35BotApplication.api.getUserById(s).get());
+            Cb35BotApplication.mine.banUser(this.api.getUserById(s).get());
         } else {
             throw new ServerException("NOT PRESENT");
         }
