@@ -16,6 +16,9 @@ let setServer = () => {
             console.log(this.responseText);
             x.style.color = "red";
             document.getElementById("main").appendChild(x);
+            setTimeout(() => {
+                x.remove();
+            }, 2000);
         } else {
             window.location.replace("/viewMessages.html");
         }

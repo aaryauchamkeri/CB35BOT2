@@ -1,7 +1,6 @@
 package com.aarya.model;
 
 import com.aarya.main.Cb35BotApplication;
-import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.server.Server;
 
 import java.util.*;
@@ -17,7 +16,6 @@ public class DB{
             ArrayList<org.javacord.api.entity.user.User> members =
                     new ArrayList<>(server.getMembers());
             for(org.javacord.api.entity.user.User u : members){
-                System.out.println(u.getName());
                 User entity = new User(0, u.getIdAsString(), u.getName());
                 dataBase.put(u.getIdAsString(), entity);
             }

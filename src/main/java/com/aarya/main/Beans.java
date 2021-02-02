@@ -1,7 +1,5 @@
 package com.aarya.main;
 
-
-
 import com.aarya.model.DB;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;

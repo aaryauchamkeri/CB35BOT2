@@ -6,26 +6,19 @@ import com.aarya.model.JsonMessage;
 import com.aarya.model.ServerException;
 import com.aarya.model.TextChannelInfo;
 import com.aarya.model.User;
-
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.server.Server;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import sun.rmi.rmic.Main;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
+import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,10 +29,11 @@ public class MainController {
     private final DiscordApi api;
 
     public static int messageCount = 500;
-    private boolean access = false;
+    private boolean access = true;
 
     @Autowired
     public MainController(DiscordApi api, DB db){
+        System.out.println("Autowired by Spring!");
         this.api = api;
         this.db = db;
     }
@@ -52,13 +46,6 @@ public class MainController {
             mv.setViewName("index.html");
         }
         return mv;
-    }
-
-    @RequestMapping("/sendLiveUpdate")
-    public void sendLiveUpdate(){
-        ServerTextChannel ch = Cb35BotApplication.mine.getTextChannelById("795485817714769970").get();
-        ch.sendMessage(Cb35BotApplication.mine.getEveryoneRole().getMentionTag() + " I'm live");
-        ch.sendMessage("https://www.twitch.tv/sb808bit");
     }
 
     @RequestMapping("/authorize")
@@ -84,6 +71,13 @@ public class MainController {
                 return 1;
             }
         }
+    }
+
+    @RequestMapping("/sendLiveUpdate")
+    public void sendLiveUpdate(){
+        ServerTextChannel ch = Cb35BotApplication.mine.getTextChannelById("795485817714769970").get();
+        ch.sendMessage(Cb35BotApplication.mine.getEveryoneRole().getMentionTag() + " I'm live");
+        ch.sendMessage("https://www.twitch.tv/sb808bit");
     }
 
     @GetMapping("/getMessages")
@@ -118,7 +112,6 @@ public class MainController {
 
     @GetMapping("/textChannels")
     public List<TextChannelInfo> channels(ModelAndView mv) throws ServerException{   
-        String entree = "";
         if(access){
             List<TextChannelInfo> listOfChannels = new ArrayList<>();
             List<ServerTextChannel> channels = Cb35BotApplication.mine.getTextChannels();
@@ -160,24 +153,11 @@ public class MainController {
     }
 
     @PostMapping("/banUser")
-    public void banUser(@RequestBody String s) throws ServerException, Exception{
+    public void banUser(@RequestBody String s) throws ServerException, InterruptedException, ExecutionException {
         if(access){
             Cb35BotApplication.mine.banUser(this.api.getUserById(s).get());
         } else {
             throw new ServerException("NOT PRESENT");
         }
     }
-
-    // @RequestMapping("/json/users")
-    // public Map<String, User> getAllUserAndInfo(){
-    //     if(DB.dataBase.toString().length() > 2) {
-    //         return DB.dataBase;
-    //     } else {
-    //         return null;
-    //     }
-    // }
-//    @Override
-//    public void addInterceptors(InterceptorRegistry interceptorRegistry){
-//        interceptorRegistry.addInterceptor(new Interceptor()).addPathPatterns("");
-//    }
 }

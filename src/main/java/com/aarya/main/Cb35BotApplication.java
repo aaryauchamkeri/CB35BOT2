@@ -1,36 +1,39 @@
 package com.aarya.main;
 
 import com.aarya.model.DB;
-import com.aarya.model.User;
-
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.server.Server;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import java.util.Scanner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
-@SpringBootApplication
+import java.util.Map;
+
+@Configuration
+@EnableAutoConfiguration
+@Import(Beans.class)
 public class Cb35BotApplication {
+
 	public static DiscordApi api;
 	public static Server mine;
 
 	static{
-
-		String s = "Myj0MCf3LyHwNSb/Ly@/Myjw-W^JFNv-Ery50L1dbKJqGPkR733phEgsW3j";
-		String toEnter = "";
-		for(int i = 0; i < s.length(); i++){
-			toEnter += (char)(s.charAt(i)+1);
+		Map<String, String> envars = System.getenv();
+		String key = envars.get("BOTID");
+		if(key == null){
+			throw new RuntimeException("NEED BOT ID ENVIRONMENT VARIABLE");
 		}
-		api = new DiscordApiBuilder().setToken(toEnter).setAllIntents().login().join();
+		api = new DiscordApiBuilder().setToken(key).setAllIntents().login().join();
+		mine = api.getServerById("795478591852642304").get();
+		DB.initializeList();
+
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Cb35BotApplication.class, args);
-		ApplicationContext appContext = new AnnotationConfigApplicationContext(Beans.class);
 		Cb35BotApplication.api.addMessageCreateListener(new MessageListener());
 	}
 }
