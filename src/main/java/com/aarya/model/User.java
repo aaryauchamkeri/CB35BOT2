@@ -36,9 +36,7 @@ public class User implements Comparable<User> {
             try {
                 org.javacord.api.entity.user.User justGot = Cb35BotApplication.api.getUserById(this.id).get();
                 justGot.sendMessage("Hey! you just got 1 rick roll");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }

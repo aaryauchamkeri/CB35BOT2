@@ -6,6 +6,7 @@ let id = "";
 (function(){
     let request = new XMLHttpRequest;
     request.open("GET", "/getUsers", true);
+    request.setRequestHeader("", "");
     request.onload = function(){
         console.log(this.status);
         let response = this.responseText;

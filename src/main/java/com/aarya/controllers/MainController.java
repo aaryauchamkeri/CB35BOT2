@@ -1,23 +1,21 @@
 package com.aarya.controllers;
 
 import com.aarya.main.Cb35BotApplication;
-import com.aarya.model.DB;
-import com.aarya.model.JsonMessage;
-import com.aarya.model.ServerException;
-import com.aarya.model.TextChannelInfo;
-import com.aarya.model.User;
+import com.aarya.model.*;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.server.Server;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import java.util.ArrayList;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,19 +31,18 @@ public class MainController {
 
     @Autowired
     public MainController(DiscordApi api, DB db){
-        System.out.println("Autowired by Spring!");
         this.api = api;
         this.db = db;
     }
 
+    @RequestMapping("/test")
+    public void test() throws NumberFormatException{
+        throw new NumberFormatException("TEST");
+    }
+
     @RequestMapping("/")
-    public ModelAndView getHome(ModelAndView mv){
-        if(Cb35BotApplication.mine != null){
-            mv.setViewName("viewMessages.html");
-        } else {
-            mv.setViewName("index.html");
-        }
-        return mv;
+    public void getHome(ModelAndView mv, HttpServletRequest req, HttpServletResponse res) throws IOException {
+        res.sendRedirect("/index.html");
     }
 
     @RequestMapping("/authorize")

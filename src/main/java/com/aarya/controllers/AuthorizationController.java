@@ -1,11 +1,15 @@
 package com.aarya.controllers;
 
+import com.aarya.model.ATBody;
+import com.aarya.model.UserInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javacord.api.DiscordApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +17,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.*;
 
 @RestController
 @RequestMapping("/authorization")
@@ -20,7 +25,11 @@ public class AuthorizationController {
 
     private DiscordApi api;
     private final String template = "client_id=%s&client_secret=%s&code=%s&redirect_uri=%s&scope=%s&grant_type=authorization_code";
-
+    private final String scope = "identify email";
+    private final String redirectUri = "http://localhost:5000/authorization/discordOAuthCode";
+    private final String clientSecret = "n5VBeXXISeX9s1RuUB6Bm91l1M40GfMV";
+    private final String clientId = "795488321974304791";
+    private static final Map<String, UserInfo> sessions = new Hashtable<>();
 
     @Autowired
     public AuthorizationController(DiscordApi api){
@@ -28,35 +37,45 @@ public class AuthorizationController {
     }
 
     @RequestMapping("/discordOAuthCode")
-    public ModelAndView getCode(HttpServletRequest req, HttpServletResponse res, ModelAndView mv) throws Exception{
+    public void getCode(HttpServletRequest req, HttpServletResponse res, ModelAndView mv) throws Exception{
 
         String code = req.getParameter("code");
-        System.out.println(code);
 
-        if(code != null) {
+        String requestBody = String.format(template, clientId, clientSecret, code, redirectUri, scope);
 
-            String scope = "identify email";
-            String redirectUri = "http://localhost:5000/authorization/discordOAuthCode";
-            String clientSecret = "n5VBeXXISeX9s1RuUB6Bm91l1M40GfMV";
-            String clientId = "795488321974304791";
+        HttpClient client = HttpClient.newHttpClient();
 
-            String requestBody = String.format(template, clientId, clientSecret, code, redirectUri, scope);
+        HttpRequest request = HttpRequest.newBuilder(URI.create("https://discord.com/api/oauth2/token"))
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
 
-            HttpClient client = HttpClient.newHttpClient();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            HttpRequest request = HttpRequest.newBuilder(URI.create("https://discord.com/api/oauth2/token"))
-                    .setHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
+        ObjectMapper om = new ObjectMapper();
+        ATBody atBody = om.readValue(response.body(), ATBody.class);
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
-            System.out.println(response.statusCode());
+        UUID sessionId = UUID.randomUUID();
+        Cookie validation = new Cookie("sessionId", sessionId.toString());
 
-        } else {
-        }
-        mv.setViewName("index.html");
-        return mv;
+        validation.setMaxAge(60*60*24);
+        validation.setPath("/");
+
+        request = HttpRequest.newBuilder(URI.create("https://discord.com/api/users/@me"))
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setHeader("Authorization", atBody.getToken_type() + " " + atBody.getAccess_token())
+                .GET()
+                .build();
+
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        UserInfo userInformation = om.readValue(response.body(), UserInfo.class);
+
+        System.out.println(userInformation.getEmail());
+
+        sessions.put(sessionId.toString(), userInformation);
+
+        res.addCookie(validation);
+        res.sendRedirect("/index.html");
     }
 }
 
