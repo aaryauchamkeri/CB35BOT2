@@ -20,9 +20,7 @@ public class FetchedData {
         this.preview = preview;
     }
 
-    public FetchedData(){
-
-    }
+    public FetchedData(){}
 
     public String getPostLink() {
         return postLink;

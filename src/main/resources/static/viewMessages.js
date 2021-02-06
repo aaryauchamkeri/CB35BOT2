@@ -5,8 +5,7 @@ let id = "";
 
 (function(){
     let request = new XMLHttpRequest;
-    request.open("GET", "/getUsers", true);
-    request.setRequestHeader("", "");
+    request.open("GET", "/main/getUsers", true);
     request.onload = function(){
         console.log(this.status);
         let response = this.responseText;
@@ -42,28 +41,28 @@ let changeScroll = () => {
 }
 
 let viewOlder = () => {
-    window.location.replace("/liveMessages.html");
+    window.location.replace("/main/liveMessages.html");
 }
 
 let sendUpdate = () => {
     let xhr = new XMLHttpRequest;
-    xhr.open("GET", "/sendLiveUpdate");
+    xhr.open("GET", "/main/sendLiveUpdate");
     xhr.send();
 }
 
 let banUser = () => {
     let val = document.getElementById("ban").value;
     let xhr = new XMLHttpRequest;
-    xhr.open("POST", "/banUser", true);
+    xhr.open("POST", "/main/banUser", true);
     xhr.send(val);
 };
 
 sendMessage = () => {
     let valueToSend = document.getElementById("messageInput").value;
     let x = new XMLHttpRequest();
-    x.open("POST", "/sendMessage");
+    x.open("POST", "/main/sendMessage");
     x.onload = () => {
-        if(!this.status === 200){
+        if(!(this.status === 200)){
             let error = document.createElement("a");
             error.innerHTML = "An error occurred sending your message"
             error.className = "errorMessage";

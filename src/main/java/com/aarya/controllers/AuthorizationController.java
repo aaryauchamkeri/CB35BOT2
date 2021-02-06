@@ -29,7 +29,7 @@ public class AuthorizationController {
     private final String redirectUri = "http://localhost:5000/authorization/discordOAuthCode";
     private final String clientSecret = "n5VBeXXISeX9s1RuUB6Bm91l1M40GfMV";
     private final String clientId = "795488321974304791";
-    private static final Map<String, UserInfo> sessions = new Hashtable<>();
+    public static final Map<String, UserInfo> sessions = new Hashtable<>();
 
     @Autowired
     public AuthorizationController(DiscordApi api){
@@ -38,18 +38,13 @@ public class AuthorizationController {
 
     @RequestMapping("/discordOAuthCode")
     public void getCode(HttpServletRequest req, HttpServletResponse res, ModelAndView mv) throws Exception{
-
         String code = req.getParameter("code");
-
         String requestBody = String.format(template, clientId, clientSecret, code, redirectUri, scope);
-
         HttpClient client = HttpClient.newHttpClient();
-
         HttpRequest request = HttpRequest.newBuilder(URI.create("https://discord.com/api/oauth2/token"))
                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         ObjectMapper om = new ObjectMapper();
@@ -57,7 +52,6 @@ public class AuthorizationController {
 
         UUID sessionId = UUID.randomUUID();
         Cookie validation = new Cookie("sessionId", sessionId.toString());
-
         validation.setMaxAge(60*60*24);
         validation.setPath("/");
 
@@ -69,13 +63,9 @@ public class AuthorizationController {
 
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
         UserInfo userInformation = om.readValue(response.body(), UserInfo.class);
-
-        System.out.println(userInformation.getEmail());
-
         sessions.put(sessionId.toString(), userInformation);
-
         res.addCookie(validation);
-        res.sendRedirect("/index.html");
+        res.sendRedirect("/clips.html");
     }
 }
 

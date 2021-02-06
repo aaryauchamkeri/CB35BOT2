@@ -76,8 +76,9 @@ public class User implements Comparable<User> {
         if(user.getName().equals(this.name) && user.getId().equals(this.id)) {
             return 1;
         }
-        else
+        else {
             return 0;
+        }
     }
 
     @Override

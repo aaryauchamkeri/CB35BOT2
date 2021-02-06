@@ -24,9 +24,6 @@ public class DB{
         }
     }
 
-    public DB(){
-    }
-
     public static synchronized void executeQuery(User user){
         if(!dataBase.containsKey(user.getName())){
             dataBase.put(user.getName(), user);

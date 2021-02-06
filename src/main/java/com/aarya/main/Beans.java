@@ -1,5 +1,6 @@
 package com.aarya.main;
 
+import com.aarya.model.AuthorizationInterceptor;
 import com.aarya.model.DB;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -14,7 +15,8 @@ public class Beans implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
+        registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/main/**");
+        registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/resources/**");
     }
 
      @Bean(name = "db")
@@ -32,5 +34,4 @@ public class Beans implements WebMvcConfigurer {
          DiscordApi api = new DiscordApiBuilder().setToken(toEnter).setAllIntents().login().join();
          return api;
     }
-
 }

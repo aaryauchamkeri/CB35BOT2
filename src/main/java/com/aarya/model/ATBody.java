@@ -16,9 +16,7 @@ public class ATBody {
         this.scope = scope;
     }
 
-    public ATBody(){
-
-    }
+    public ATBody(){}
 
     public void setAccess_token(String access_token) {
         this.access_token = access_token;

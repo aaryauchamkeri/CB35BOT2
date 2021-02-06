@@ -1,9 +1,9 @@
 package com.aarya.model;
 
-public class ServerException extends Exception{
+public class ServerException extends RuntimeException{
 
-    public ServerException(String reason){
-        super(reason);
+    public ServerException(String message){
+        super(message);
     }
     
 }

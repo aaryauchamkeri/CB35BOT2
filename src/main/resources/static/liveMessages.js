@@ -7,7 +7,7 @@ let scroll = true;
 let setImage = false;
 
 let request = new XMLHttpRequest;
-request.open("GET", "/textChannels", true);
+request.open("GET", "/main/textChannels", true);
 request.onload = function(){
     console.log(this.responseText);
     let results = JSON.parse(this.responseText);
@@ -25,7 +25,7 @@ request.send();
 constantlyUpdate = () => {
     let response;
     let x = new XMLHttpRequest();
-    x.open("GET", "/getMessages", true);
+    x.open("GET", "/main/getMessages", true);
     x.onload = function(){
         // console.log(this.status);
         response = this.responseText;
@@ -67,7 +67,7 @@ constantlyUpdate = () => {
 }
 
 window.onmessage = (e) => {
-    if (e.data == 'hello') {
+    if (e.data === 'hello') {
         scroll = !scroll;
     }
 }

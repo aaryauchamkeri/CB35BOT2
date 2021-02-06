@@ -2,17 +2,13 @@ package com.aarya.controllers;
 
 import com.aarya.main.Cb35BotApplication;
 import com.aarya.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageSet;
-import org.javacord.api.entity.server.Server;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.awt.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -21,53 +17,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@RequestMapping("/main")
 public class MainController {
 
-    private final DB db;
     private final DiscordApi api;
-
     public static int messageCount = 500;
-    private boolean access = true;
+    private final boolean access = true;
 
     @Autowired
-    public MainController(DiscordApi api, DB db){
+    public MainController(DiscordApi api){
         this.api = api;
-        this.db = db;
     }
 
-    @RequestMapping("/test")
-    public void test() throws NumberFormatException{
-        throw new NumberFormatException("TEST");
-    }
 
     @RequestMapping("/")
-    public void getHome(ModelAndView mv, HttpServletRequest req, HttpServletResponse res) throws IOException {
-        res.sendRedirect("/index.html");
-    }
-
-    @RequestMapping("/authorize")
-    public int setServer(@RequestBody String s){
-        String serverId = s.trim();
-        Server server = this.api.getServerById(serverId).orElse(null);
-        if(server == null){
-            System.out.println("NULL");
-            return 0;
-        } else{
-            if(!server.isAdmin(this.api.getYourself())){
-                return 2;
-            } else{
-                Cb35BotApplication.mine = server;
-                DB.initializeList();
-                access = true;
-                Cb35BotApplication.mine.addServerMemberJoinListener(e -> {
-                    String id = e.getUser().getIdAsString();
-                    String name = e.getUser().getName();
-                    User u = new User(0, id , name);
-                    DB.dataBase.put(id, u);
-                });
-                return 1;
-            }
-        }
+    public void getHome(HttpServletResponse res) throws IOException{
+        res.sendRedirect("/clips.html");
     }
 
     @RequestMapping("/sendLiveUpdate")
@@ -77,8 +42,18 @@ public class MainController {
         ch.sendMessage("https://www.twitch.tv/sb808bit");
     }
 
+    @RequestMapping("/getUserInfo")
+    public String userInfo(@RequestHeader String sessionId) throws Exception{
+        ObjectMapper om = new ObjectMapper();
+        UserInfo user = AuthorizationController.sessions.get(sessionId);
+        return om.writeValueAsString(user);
+    }
+
+    @RequestMapping("/checkSession")
+    public void check(){ }
+
     @GetMapping("/getMessages")
-    public List<JsonMessage> getMessages(HttpServletRequest req, HttpServletResponse res) throws ServerException, Exception{
+    public List<JsonMessage> getMessages(HttpServletRequest req, HttpServletResponse res) throws ServerException, ExecutionException, InterruptedException {
         if(access){
             ServerTextChannel channel = Cb35BotApplication.mine.getTextChannelById(req.getHeader("channelId")).get();
             MessageSet set = channel.getMessages(messageCount).get();
@@ -108,7 +83,7 @@ public class MainController {
     }
 
     @GetMapping("/textChannels")
-    public List<TextChannelInfo> channels(ModelAndView mv) throws ServerException{   
+    public List<TextChannelInfo> channels() throws ServerException{
         if(access){
             List<TextChannelInfo> listOfChannels = new ArrayList<>();
             List<ServerTextChannel> channels = Cb35BotApplication.mine.getTextChannels();
@@ -139,7 +114,7 @@ public class MainController {
     public void sendMessage(@RequestBody String value, HttpServletRequest req) throws ServerException{
         if(access){
             Optional<ServerTextChannel> channel = Cb35BotApplication.mine.getTextChannelById(req.getHeader("server").trim());
-            if(!channel.isPresent()){
+            if(channel.isEmpty()){
 
             } else{
                 channel.get().sendMessage(value);

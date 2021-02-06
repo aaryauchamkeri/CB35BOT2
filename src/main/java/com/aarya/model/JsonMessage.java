@@ -2,14 +2,10 @@ package com.aarya.model;
 
 public class JsonMessage {
 
-    public String author;
-    public String messageContent;
-    public String url;
-    // u.getAvatar().getUrl();
-    // public JsonMessage(String author, String content){
-    //     this.author = author;
-    //     this.messageContent = content;
-    // }
+    private String author;
+    private String messageContent;
+    private String url;
+    private int x;
     
     public JsonMessage(String author, String content, String url){
         this.author = author;
@@ -29,8 +25,4 @@ public class JsonMessage {
         return this.url;
     }
 
-    // @Override
-    // public String toString(){
-    //     return "{ \"author\" : \"" + author + "\", \"content\" : " + messageContent + "} ";
-    // }
 }

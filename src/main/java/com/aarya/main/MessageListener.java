@@ -49,7 +49,11 @@ public class MessageListener implements MessageCreateListener {
     }
 
     public void addPoint(String id){
-        DB.dataBase.get(id).setPoints(1);
+        try {
+            DB.dataBase.get(id).setPoints(1);
+        } catch (NullPointerException e){
+            // do nothing, not a real user
+        }
     }
 
     public void handleEvent(List<String> arguments, MessageCreateEvent event){
@@ -57,7 +61,7 @@ public class MessageListener implements MessageCreateListener {
 
             if (event.getMessageContent().toLowerCase().startsWith("!meme")) {
                 sendMeme(event, arguments);
-            } else if (event.getMessageContent().toLowerCase().equals("!schedule")) {
+            } else if (event.getMessageContent().equalsIgnoreCase("!schedule")) {
                 getSchedule(event, arguments);
             } else if (event.getMessageContent().startsWith("!rick ")) {
                 rickRoll(event, arguments);
@@ -176,6 +180,4 @@ public class MessageListener implements MessageCreateListener {
             event.getChannel().sendMessage("Not enough points for rick roll!");
         }
     }
-
-
 }
