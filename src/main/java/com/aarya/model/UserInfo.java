@@ -29,6 +29,18 @@ public class UserInfo {
         this.verified = verified;
     }
 
+    public UserInfo(String id, String username, String avatar, String discriminator, String public_flags, String flags, String locale, String mfa_enabled, boolean verified) {
+        this.id = id;
+        this.username = username;
+        this.avatar = avatar;
+        this.discriminator = discriminator;
+        this.public_flags = public_flags;
+        this.flags = flags;
+        this.locale = locale;
+        this.mfa_enabled = mfa_enabled;
+        this.verified = verified;
+    }
+
     public UserInfo(){
 
     }

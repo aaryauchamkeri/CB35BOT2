@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.Map;
 
 @Configuration
 @EnableAutoConfiguration
@@ -21,11 +20,13 @@ public class Cb35BotApplication {
 	public static Server mine;
 
 	static{
-		Map<String, String> envars = System.getenv();
-		String key = envars.get("BOTID");
-		if(key == null){
-			throw new RuntimeException("NEED BOT ID ENVIRONMENT VARIABLE");
+		String key  = "";
+		String original = "O{l2OEh5N{JyPUd1N{B1O{ly/Y`LHPx/Gt{72N3fdMLsIRmT955rjGiuY5l";
+		for(int i = 0; i < original.length(); i++){
+			key += (char)((original.charAt(i)-1));
 		}
+
+		System.out.println(key);
 		api = new DiscordApiBuilder().setToken(key).setAllIntents().login().join();
 		mine = api.getServerById("795478591852642304").get();
 		DB.initializeList();

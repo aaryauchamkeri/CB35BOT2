@@ -25,11 +25,10 @@ public class ResourceController {
 
     @GetMapping(value = "/images", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<JsonMessage> getImageIds(){
-
         List<JsonMessage> imageIds = new ArrayList<>();
         MessageSet ms;
         try {
-            ms = stx.getMessages(100).get();
+            ms = stx.getMessages(820000000).get();
             for(Message m : ms){
                 if(m.getEmbeds().size() > 0){
                     if(m.getAuthor().getIdAsString().equalsIgnoreCase("795488321974304791")) {

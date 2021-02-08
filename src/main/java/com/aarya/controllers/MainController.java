@@ -8,6 +8,7 @@ import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageSet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.*;
@@ -32,7 +33,7 @@ public class MainController {
 
     @RequestMapping("/")
     public void getHome(HttpServletResponse res) throws IOException{
-        res.sendRedirect("/clips.html");
+        res.sendRedirect("/index.html");
     }
 
     @RequestMapping("/sendLiveUpdate")
@@ -42,7 +43,7 @@ public class MainController {
         ch.sendMessage("https://www.twitch.tv/sb808bit");
     }
 
-    @RequestMapping("/getUserInfo")
+    @RequestMapping(value = "/getUserInfo", produces = MediaType.APPLICATION_JSON_VALUE)
     public String userInfo(@RequestHeader String sessionId) throws Exception{
         ObjectMapper om = new ObjectMapper();
         UserInfo user = AuthorizationController.sessions.get(sessionId);

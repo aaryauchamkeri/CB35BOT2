@@ -15,7 +15,7 @@
 	<description>Javacord web app to manage server</description>
 
 	<properties>
-		<java.version>8</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<repositories>
@@ -31,9 +31,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>com.sedmelluq</groupId>
 			<artifactId>lavaplayer</artifactId>
@@ -76,5 +73,4 @@
             </plugin>
         </plugins>
 	</build>
-
 </project>
