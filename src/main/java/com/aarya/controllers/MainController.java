@@ -40,7 +40,7 @@ public class MainController {
     public void sendLiveUpdate(){
         ServerTextChannel ch = Cb35BotApplication.mine.getTextChannelById("795485817714769970").get();
         ch.sendMessage(Cb35BotApplication.mine.getEveryoneRole().getMentionTag() + " I'm live");
-        ch.sendMessage("https://www.twitch.tv/sb808bit");
+        ch.sendMessage("https://www.twitch.tv/-----");
     }
 
     @RequestMapping(value = "/getUserInfo", produces = MediaType.APPLICATION_JSON_VALUE)
